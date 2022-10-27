@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Cart</title>
+    <link rel="stylesheet" href="/css/main.css" />
+    <!-- Font Awesome -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <!-- Google Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+      rel="stylesheet"
+    />
+    <!-- MDB -->
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.11.0/mdb.min.css"
+      rel="stylesheet"
+    />
+  </head>
+    <link rel="stylesheet" href="/css/product.css">
+</head>
+
+<body>
+    
+
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">Logo</a>
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-mdb-toggle="collapse"
+            data-mdb-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <i class="fas fa-bars"></i>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav">
+              <a class="nav-link active" aria-current="page" href="/">Home</a>
+            </div>
+          </div>
+          <div class="d-flex align-items-center">
+
+            <span style="border-radius: 50%; background-color: green; width: 25px; text-align: center;color: white; position: relative;left: 40px;bottom: 10px ;"
+            th:text="${items}" ></span>
+            <!-- Icon -->
+            <a class="text-white me-3 mr-3" href="/cart">
+              <i class="fas fa-shopping-cart fa-lg"></i>
+              
+             
+            </a>
+  
+            <!-- Avatar -->
+            <div
+              th:switch="${#authentication}? ${#authorization.expression('isAuthenticated()')} : ${false}"
+            >
+              <div class="navbar-nav">
+                <div th:case="${false}">
+                  <div class="dropdown">
+                    <a
+                      class="nav-link active"
+                      aria-current="page"
+                      th:href="@{/signin}"
+                      >Login</a
+                    >
+                  </div>
+                </div>
+                <div th:case="${true}">
+                  <div class="dropdown">
+                    <form th:action="@{/logout}" method="post">
+                      <button type="submit" class="btn btn-dark">
+                        <a class="nav-link active" aria-current="page">Logout</a>
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </nav>
+  
+    
+    <div class="container">
+        <center>
+            <h2>Your Products </h2>
+            <hr>
+        </center>  
+           
+           <div class="row  ">
+            <div class="col col-md-3 col-lg-3 col-sm-6 d-flex justify-content-center  " >
+                <h3>Item</h3>
+            </div>
+            <div class="col col-md-3 col-lg-3 col-sm-6  d-flex justify-content-center " >
+                <h3>
+                    Quantity
+                </h3>
+            </div>
+            <div class="col col-md-3 col-lg-3 col-sm-6 d-flex justify-content-center  ">
+                <h3>Price</h3>
+            </div>
+            <div class="col col-md-3 col-lg-3 col-sm-6 d-flex justify-content-center  ">
+                <h3>
+                    Delete
+                </h3>
+            </div>
+           </div>
+        
+           <hr>
+
+            
+           <div  th:each="prod: ${products}">
+
+           
+                <div class="row align-items-center ">
+                <div class="col col-md-3 col-lg-3 col-sm-6 d-flex justify-content-center  " >
+                    <header class="card__header">
+                        <h3 class="product__title" th:text="${prod.title}"></h3>
+                    </header>
+                </div>
+                <div class="col col-md-3 col-lg-3 col-sm-6 d-flex justify-content-center ">
+                    <h4 th:text="${prod.quantity}"></h4>
+                </div>
+                <div class="col col-md-3 col-lg-3 col-sm-6   d-flex justify-content-center ">
+                    <h4 th:text="${prod.quantity} * ${prod.price}"></h4>
+                </div>
+                
+                <div class="col col-md-3 col-lg-3 col-sm-6    d-flex justify-content-center ">
+                   
+                    <form th:action="@{/cart/delete}" th:method="post">
+                       <button type="submit" style="background-color: white; border: none;">
+                        <a class=" text-danger me-3 ">
+                        <i class="fas fa-trash fa-lg"></i> 
+                        </a>
+                       </button> 
+                       <input type="hidden" name="id" th:value="${prod.id}" />
+                    </form>
+                </div>
+                </div>
+                <hr>
+              </div>
+
+            <div class="total">
+               <span class="tot">
+                 Total : $<span th:text="${total}"></span>
+               </span>
+            </div>
+            <hr>
+        <div style="text-align: center">
+            <form th:action="@{/cart/reset}" th:method="post">
+                <button type="submit" class="bt" onclick="alertFunction()">
+                    <a>
+                        Buy now
+                    </a>
+                </button>
+            </form>
+        </div>
+    </div>
+    <script>
+        function alertFunction() {
+          alert("Your order is placed!");
+        }
+    </script>
+    <script
+    type="text/javascript"
+    src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/3.11.0/mdb.min.js"
+  ></script>
+</body>
+</html>
